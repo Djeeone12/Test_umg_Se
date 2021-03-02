@@ -1,6 +1,7 @@
 const express = require('express');
 const morgan =require('morgan');
 const axios = require('axios');
+var Linkedin = require('node-linkedin')('app-id', 'secret'); // Get app-id + secret from your LinkedIn developer account
 
 //Usingpackages 
 const app = express();
@@ -9,14 +10,28 @@ domain =undefined;
 // create Port for Heroku
 let port = process.env.PORT||9000
 
+
+
 // Middleware to read json objs
 app.use(express.json()) 
 app.use(morgan('dev'));
-// Routes to acces the root directory of the API
-app.get('/', (req, res) => {
-    res.send("<h1> Este es una tarea de Cloud computing</h1>");
-})
-
+// call back for access token
+app.get('/callback', async (req, res) => {
+    if(!req.query.code) {
+        res.redirect('/');
+        return;
+    }
+    try {
+        const data = await API.getAccessToken(req);
+        if(data.access_token) {
+            req.session.token = data.access_token;
+            req.session.authorized = true;
+        }
+        res.redirect('/');
+    } catch(err) {
+        res.json(err);
+    }
+});
 // Route to test a json response
 app.get('/test', (req, res) => {
     res.json({
@@ -73,6 +88,7 @@ app.post('service/{Request Body}', (req, res) => {
        
     })
 })
+//post Publish
 
  // Testing for axios APIS
  app.get('/invitacion/{invitation Urn} ',(req,res) => {
