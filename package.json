@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "Start":"node  inde.js",
+    "dev":"nodemon inde.js"
   },
   "author": "",
   "license": "ISC",
